@@ -23,8 +23,8 @@ const NUM2 = readline.prompt();
 
 if (OPERATOR in OPERATORS)
 {
-    const result = OPERATORS[OPERATOR](parseFloat(NUM1), parseFloat(NUM2));
-    console.log(`${NUM1} ${OPERATOR} ${NUM2} = ${result}`);
+    const RESULT = OPERATORS[OPERATOR](parseFloat(NUM1), parseFloat(NUM2));
+    console.log(`${NUM1} ${OPERATOR} ${NUM2} = ${RESULT}`);
 }
 else
 {
