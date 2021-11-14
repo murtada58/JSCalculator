@@ -12,25 +12,23 @@ let running = true;
 console.log("Welcome to the calculator!");
 while (running)
 {
-    console.log("Please enter an operator: ");
-    let  operator = readline.prompt();
-    while (!(operator in OPERATORS))
-    {
-        console.log(`${operator} is not a valid operator, please try again: `);
-        operator = readline.prompt();
-    }
-    
-    const NUMBERS_COUNT = Math.round(GetInputAsNumber(`How many numbers do you want to ${operator}? `));
+    let  operator = getValidInput(  "Please enter an operator: ",
+                                    (response) => response,
+                                    (resposne) => `${resposne} is not a valid operator, please try again: `,
+                                    (response) => response in OPERATORS
+                                );
+
+    const NUMBERS_COUNT = Math.round(getInputAsNumber(`How many numbers do you want to ${operator}? `));
     let numbers = Array(NUMBERS_COUNT);
 
     if (NUMBERS_COUNT > 0)
     {
-        let number = GetInputAsNumber("Please enter number 1: ");
+        let number = getInputAsNumber("Please enter number 1: ");
         numbers.push(number);
         let equation = `${number}`;
         for (let i = 2; i <= NUMBERS_COUNT; i++)
         {
-            number = GetInputAsNumber(`Please enter number ${i}: `);
+            number = getInputAsNumber(`Please enter number ${i}: `);
             numbers.push(number);
             equation += ` ${operator} ${number}`;
         }
@@ -43,14 +41,28 @@ while (running)
 }
 console.log("Bye :)");
 
-function GetInputAsNumber(message)
+function getValidInput( message,
+                        resposneHandler = (response) => response,
+                        invalidMessageHandler = (resposne) => "Try again",
+                        validationFunction = (response) => resposne
+                    )
 {
     console.log(message);
-    let response = parseFloat(readline.prompt());
-    while (isNaN(response))
+    let response = resposneHandler(readline.prompt());
+    while (!validationFunction(response))
     {
-        console.log("That is not a valid number, please try again: ")
-        response = parseFloat(readline.prompt());
+        console.log(invalidMessageHandler(response));
+        response = resposneHandler(readline.prompt());
     }
+
     return response;
+}
+
+function getInputAsNumber(message)
+{
+    return getValidInput(   message,
+                            parseFloat,
+                            (resposne) => "That is not a valid number, please try again: ",
+                            (response) => !isNaN(response)
+                        )
 }
